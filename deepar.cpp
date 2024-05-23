@@ -6,7 +6,7 @@
 // What was changed: ExtHuber was added 
 
 #include <bits/stdc++.h>
-#include <boost/math/distributions/inverse_gamma.hpp>
+#include <boost/math/distributions/gamma.hpp>
 #include "Breal.hpp"
 
 #define MAX_N 100
@@ -39,7 +39,7 @@ long long find_k(long double epsilon, long double delta) {
 	while (step >= 1) {
 		while (max_k - step > 1) {
 			long long K = max_k - step;
-			boost::math::inverse_gamma gm(K, K - 1.);
+			boost::math::gamma_distribution<> gm(K, 1. / (K - 1.));
 			long double cumulative = boost::math::cdf(gm, 1. / (1. - epsilon)) - boost::math::cdf(gm, 1. / (1. + epsilon));
 			if (cumulative >= 1 - delta) {
 				max_k -= step;
@@ -914,7 +914,7 @@ int main() {
 	cin>>epsilon>>delta>>J>>time_limit;
 
 	// Find necessary number of accepted samples for desired accuracy (Huber, 2017)
-	long long K = find_k(epsilon, delta); // find_k(0.1, 0.05) = 388
+	long long K = find_k(epsilon, delta); // find_k(0.1, 0.05) = 385
 
 	cin>>n;
 	if (J > MAX_J) {
